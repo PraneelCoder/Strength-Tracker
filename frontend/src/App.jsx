@@ -17,6 +17,10 @@ export default function App() {
   const [category, setCategory] = useState('Bodyweight');
   const [notes, setNotes] = useState('');
 
+  const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:5000' 
+    : 'https://ironlog-backend-ts0m.onrender.com';
+
   const handleAuth = async (e) => {
     e.preventDefault();
     setAuthError('');
@@ -24,7 +28,7 @@ export default function App() {
     const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
     
     try {
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
+      const res = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -55,7 +59,7 @@ export default function App() {
   useEffect(() => {
     if (!token) return;
 
-    fetch('http://localhost:5000/api/entries', {
+    fetch(`${API_URL}/api/entries`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => {
@@ -81,7 +85,7 @@ export default function App() {
       notes 
     };
 
-    const res = await fetch('http://localhost:5000/api/entries', {
+    const res = await fetch(`${API_URL}/api/entries`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -99,7 +103,7 @@ export default function App() {
   };
 
   const handleDelete = async (id) => {
-    await fetch(`http://localhost:5000/api/entries/${id}`, { 
+    await fetch(`${API_URL}/api/entries/${id}`, { 
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
